@@ -17,7 +17,7 @@
 <script type="text/javascript">
   //百度地图API功能
   var map = new BMap.Map("allmap"); //创建Map实例
-  var point = new BMap.Point(116.404, 39.915);//初始化地图,设置中心点坐标和地图级别
+  var point = new BMap.Point(112.899, 28.141);//初始化地图,设置中心点坐标和地图级别
   map.centerAndZoom(point, 15);
   map.addControl(new BMap.MapTypeControl());   //添加地图类型控件
   map.setCurrentCity("北京"); //设置地图显示的城市 此项是必须设置的
@@ -30,16 +30,27 @@
   addMarker(point);
   
   var content = "label";
-
   
-  function msg(x,y,s) {
+  
+
+
+  function update_make(x,y,s,name) {
     var point2 = new BMap.Point(x, y);
-	addMarker(point2);
+    addMarker(point2);
 	
-	var label = new BMap.Label(s, {       // 创建文本标注
+	
+	var label = new BMap.Label(name+":"+s, {       // 创建文本标注
     position: point2,                          // 设置标注的地理位置
-    offset: new BMap.Size(10, 20)           // 设置标注的偏移量
+    offset: new BMap.Size(10, 10)           // 设置标注的偏移量
     })  
+
     map.addOverlay(label);                        // 将标注添加到地图中
   }
+
+  
+
+  function clean(){
+    map.clearOverlays();
+  }
+  
 </script>
