@@ -62,6 +62,12 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
                     self.request.sendall(msg_js.encode('utf-8'))
         if json_info['type'] =='getteams':
             self.get_teamlist()
+        if json_info['type'] =='setscore':
+            t_name = json_info['team']
+            score = json_info['score']
+            for t in TEAMLIST:
+                if t_name == t.name:
+                    t.score = score
         
         
     def setup(self):
@@ -84,6 +90,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         msg_dic.update({'plist':teamList})
         msg_js = json.dumps(msg_dic)
         self.request.sendall(msg_js.encode('utf-8'))
+
+    
         
 class Team():
     def __init__(self,name): 
@@ -91,6 +99,7 @@ class Team():
         self.lon = 1
         self.lat = 1
         self.score = 0
+        self.live = True
         self.lastheart  =0
         self.heart = 0
         self.thread = threading.Thread(target=self.loop)
@@ -107,14 +116,16 @@ class Team():
         
     def loop(self):
         while True:
-            time.sleep(5)
+            time.sleep(15)
             if self.lastheart == self.heart:
-                TEAMLIST.remove(self)
-                del(self)
-                print(len(TEAMLIST))
+                # TEAMLIST.remove(self)
+                # del(self)
+                # print(len(TEAMLIST))
+                self.live = False
                 
-                break
+                # break
             else:
+                self.live = True
                 self.lastheart =self.heart
         
 
@@ -237,7 +248,8 @@ class Phone(Manager):
                 print ('link a car~')
             
 
-HOST,PORT = "172.16.41.225",8899
+# HOST,PORT = "172.16.41.225",8899
+HOST,PORT = "172.17.253.202",8899
 
 server=socketserver.ThreadingTCPServer((HOST,PORT),MyTCPHandler)#mutilt
 server.serve_forever()

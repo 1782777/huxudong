@@ -97,24 +97,24 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        switch (requestCode) {
-//            case 1: {
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//
-//                    // 权限被用户同意。
-//                    Toast.makeText(MainActivity.this, "权限被用户同意！",Toast.LENGTH_LONG).show();
-//
-//                } else {
-//                    // 权限被用户拒绝了。
-//                    Toast.makeText(MainActivity.this, "定位权限被禁止，相关地图功能无法使用！",Toast.LENGTH_LONG).show();
-//                }
-//
-//            }
-//        }
-//    }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // 权限被用户同意。
+                    Toast.makeText(MainActivity.this, "权限被用户同意！",Toast.LENGTH_LONG).show();
+
+                } else {
+                    // 权限被用户拒绝了。
+                    Toast.makeText(MainActivity.this, "定位权限被禁止，相关地图功能无法使用！",Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+    }
 
     public class MyReceiver extends BroadcastReceiver {
         @Override
@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
             Bundle bundle=intent.getExtras();
             String lon=bundle.getString("lon");
             String lat=bundle.getString("lat");
+//            String score=bundle.getString("score");
 //            Log.e("ACTICITY", lon);
             textView_lon.setText(lon);
             textView_lat.setText(lat);

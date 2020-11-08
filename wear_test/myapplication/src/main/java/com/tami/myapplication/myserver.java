@@ -83,11 +83,11 @@ public class myserver extends Service {
                     byte[] buffer = new byte[2048];
                     int len = inputStream.read(buffer);
                     String rev = new String(buffer,0,len);
-                    Log.d(this.toString(), "rev: "+rev);
-                    Intent intent=new Intent();
-                    intent.putExtra("score", rev);
-                    intent.setAction("com.project.moli.demobroad.MyService");
-                    sendBroadcast(intent);
+                    Log.e(this.toString(), "rev: "+rev);
+//                    Intent intent=new Intent();
+//                    intent.putExtra("score", rev);
+//                    intent.setAction("com.project.moli.demobroad.MyService");
+//                    sendBroadcast(intent);
                     socket.close();
 
                 } catch (Exception e) {
