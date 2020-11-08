@@ -45,6 +45,7 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             team_name =json_info['id']
             lon = json_info['lon']
             lat = json_info['lat']
+            
             hasteam = False
             for t in TEAMLIST:
                 if t.name == team_name:
@@ -53,6 +54,12 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             if not hasteam :
                 team = Team(team_name)
                 TEAMLIST.append(team)
+
+            for t in TEAMLIST:
+                if t.name == team_name:
+                    msg_dic ={'type':'score','score':t.score}
+                    msg_js = json.dumps(msg_dic)
+                    self.request.sendall(msg_js.encode('utf-8'))
         if json_info['type'] =='getteams':
             self.get_teamlist()
         

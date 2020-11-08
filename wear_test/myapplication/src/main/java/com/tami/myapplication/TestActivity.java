@@ -20,9 +20,9 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new GpsLocationListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5,
-                locationListener);
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        locationListener = new GpsLocationListener();
+//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 5,
+//                locationListener);
     }
 }

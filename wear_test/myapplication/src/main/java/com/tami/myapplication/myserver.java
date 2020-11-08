@@ -25,7 +25,10 @@ public class myserver extends Service {
     private static final String TAG = "myserver";
     String name;
     String str_lon="0",str_lat="0";
+    double lon=0.0,lat=0.0;
     Handler handler =null;
+    LocationManager mLocationManager;
+    Criteria criteria;
 
     @Nullable
     @Override
@@ -43,9 +46,9 @@ public class myserver extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.e(TAG, "onStartCommand:");
         name=intent.getStringExtra("name");
-        Log.d(TAG, "onStartCommand: "+name);
+        Log.e(TAG, "onStartCommand: "+name);
         InitGPS();
-        sendRequestWithHttpClient();
+//        sendRequestWithHttpClient();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -56,42 +59,41 @@ public class myserver extends Service {
 
     }
 
+
     private void sendRequestWithHttpClient(){
         new Thread(new Runnable() {
             @Override
             public void run() {
 
 //                HttpURLConnection conn = null;
-                while (true) {
-                    try {
 
-                        Thread.sleep(2000);
-                        Socket socket = new Socket("182.92.114.73", 8899);
-                        OutputStream outputStream = socket.getOutputStream();
-                        JSONObject json = new JSONObject();
-                        json.put("type", "updategps");
-                        json.put("id",name);
-                        json.put("lon",str_lon);
-                        json.put("lat",str_lat);
-                        Log.d(this.toString(), "send: "+json.toString());
-                        outputStream.write(json.toString().getBytes());
-                        InputStream inputStream = socket.getInputStream();
-                        byte[] buffer = new byte[2048];
-                        int len = inputStream.read(buffer);
-                        String rev = new String(buffer,0,len);
-                        Log.d(this.toString(), "rev: "+rev);
+                try {
 
-//                        Intent intent=new Intent();
-//                        intent.putExtra("count", rev);
-//                        intent.setAction("com.project.moli.demobroad.MyService");
-//                        sendBroadcast(intent);
 
-                        socket.close();
+                    Socket socket = new Socket("182.92.114.73", 8899);
+                    OutputStream outputStream = socket.getOutputStream();
+                    JSONObject json = new JSONObject();
+                    json.put("type", "updategps");
+                    json.put("id",name);
+                    json.put("lon",str_lon);
+                    json.put("lat",str_lat);
+                    Log.d(this.toString(), "send: "+json.toString());
+                    outputStream.write(json.toString().getBytes());
+                    InputStream inputStream = socket.getInputStream();
+                    byte[] buffer = new byte[2048];
+                    int len = inputStream.read(buffer);
+                    String rev = new String(buffer,0,len);
+                    Log.d(this.toString(), "rev: "+rev);
+                    Intent intent=new Intent();
+                    intent.putExtra("score", rev);
+                    intent.setAction("com.project.moli.demobroad.MyService");
+                    sendBroadcast(intent);
+                    socket.close();
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
 
 
             }
@@ -103,8 +105,8 @@ public class myserver extends Service {
 
 
         //if(ContextCompat.checkSelfPermission(this,android.Manifest.permission.ACCESS_FINE_LOCATION)== PackageManager.PERMISSION_GRANTED) {
-        LocationManager mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        criteria = new Criteria();
         criteria.setAccuracy(Criteria.ACCURACY_FINE);//高精度
         criteria.setAltitudeRequired(false);//无海拔要求   criteria.setBearingRequired(false);//无方位要求
         criteria.setCostAllowed(true);//允许产生资费   criteria.setPowerRequirement(Criteria.POWER_LOW);//低功耗
@@ -114,8 +116,8 @@ public class myserver extends Service {
         Log.e("gps", "InitGPS: " + provider);
 //        label.setText(provider);
         try{
-            Location location = mLocationManager.getLastKnownLocation(provider);
-            mLocationManager.requestLocationUpdates(provider, 2000, 2, locationListener);
+//            Location location = mLocationManager.getLastKnownLocation(provider);
+            mLocationManager.requestLocationUpdates(provider, 10000, 5, locationListener);
         }catch(SecurityException ex)
         {
 //            label.setText("not access");
@@ -128,10 +130,12 @@ public class myserver extends Service {
     public LocationListener locationListener=new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-            str_lon = String.valueOf(longitude);
-            str_lat = String.valueOf(latitude);
+            lon = location.getLongitude();
+            lat = location.getLatitude();
+            str_lon = String.valueOf(lon);
+            str_lat = String.valueOf(lat);
+            Log.e(TAG, "onLocationChanged: "+str_lon+"::"+str_lat );
+            sendRequestWithHttpClient();
             Intent intent=new Intent();
             intent.putExtra("lon", str_lon);
             intent.putExtra("lat", str_lat);
@@ -146,7 +150,25 @@ public class myserver extends Service {
 
         @Override
         public void onProviderEnabled(String provider) {
+            String bestProvider = mLocationManager.getBestProvider(criteria, true);
 
+            try {
+                Location location = mLocationManager.getLastKnownLocation(bestProvider);
+                lon = location.getLongitude();
+                lat = location.getLatitude();
+                str_lon = String.valueOf(lon);
+                str_lat = String.valueOf(lat);
+                sendRequestWithHttpClient();
+                Intent intent=new Intent();
+                intent.putExtra("lon", str_lon);
+                intent.putExtra("lat", str_lat);
+                intent.setAction("com.project.moli.demobroad.MyService");
+                sendBroadcast(intent);
+
+            }catch(SecurityException ex)
+            {
+//                textView_lat.setText("no init gps location");
+            }
         }
 
         @Override
