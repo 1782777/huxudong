@@ -24,7 +24,7 @@ import androidx.annotation.Nullable;
 public class myserver extends Service {
     private static final String TAG = "myserver";
     String name;
-    String str_lon="0",str_lat="0";
+    public String str_lon="0",str_lat="0",str_score="-1";
     double lon=0.0,lat=0.0;
     Handler handler =null;
     LocationManager mLocationManager;
@@ -84,6 +84,10 @@ public class myserver extends Service {
                     int len = inputStream.read(buffer);
                     String rev = new String(buffer,0,len);
                     Log.e(this.toString(), "rev: "+rev);
+
+                    JSONObject jsonObject = new JSONObject(rev);
+                    str_score = ""+ jsonObject.getInt("score");
+
 //                    Intent intent=new Intent();
 //                    intent.putExtra("score", rev);
 //                    intent.setAction("com.project.moli.demobroad.MyService");
@@ -117,7 +121,7 @@ public class myserver extends Service {
 //        label.setText(provider);
         try{
 //            Location location = mLocationManager.getLastKnownLocation(provider);
-            mLocationManager.requestLocationUpdates(provider, 10000, 5, locationListener);
+            mLocationManager.requestLocationUpdates(provider, 5000, 5, locationListener);
         }catch(SecurityException ex)
         {
 //            label.setText("not access");
@@ -139,6 +143,7 @@ public class myserver extends Service {
             Intent intent=new Intent();
             intent.putExtra("lon", str_lon);
             intent.putExtra("lat", str_lat);
+            intent.putExtra("score", str_score);
             intent.setAction("com.project.moli.demobroad.MyService");
             sendBroadcast(intent);
         }

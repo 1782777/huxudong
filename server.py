@@ -71,10 +71,10 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         
         
     def setup(self):
-        print("before handle,连接建立：",self.client_address)
+        print("connet ：",self.client_address)
         
     def finish(self):
-        print("finish run  after handle")
+        print("disconnet")
         # for car in CARLIST:
         #     if car.add == self.client_address:
         #         CARLIST.remove(car)
@@ -85,7 +85,8 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
         teamList = []
         for t in TEAMLIST:
             teaminfo ={'name':t.name,'lon':t.lon,'lat':t.lat,'score':t.score}
-        teamList.append(teaminfo)
+            teamList.append(teaminfo)
+        
         msg_dic ={'type':'teams_info'}
         msg_dic.update({'plist':teamList})
         msg_js = json.dumps(msg_dic)

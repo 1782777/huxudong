@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "GpsActivity";
     EditText editText;
-    TextView textView,textView_lon,textView_lat;
+    TextView textView,textView_lon,textView_lat,textView_score;
     Button btm;
     ToggleButton toggle;
     Intent intent ;
@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         editText = findViewById(R.id.editText);
-        btm = findViewById(R.id.button);
+
         textView = findViewById(R.id.textview);
         textView_lon = findViewById(R.id.textView_lon);
         textView_lat = findViewById(R.id.textView_lat);
-
+        textView_score = findViewById(R.id.textView_score);
 
         toggle =findViewById(R.id.toggleButton);
 
@@ -122,10 +122,11 @@ public class MainActivity extends AppCompatActivity {
             Bundle bundle=intent.getExtras();
             String lon=bundle.getString("lon");
             String lat=bundle.getString("lat");
-//            String score=bundle.getString("score");
+            String score=bundle.getString("score");
 //            Log.e("ACTICITY", lon);
             textView_lon.setText(lon);
             textView_lat.setText(lat);
+            textView_score.setText(score);
         }
     }
 
