@@ -20,6 +20,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Resources;
 using System.Net;
+using System.Threading;
 
 namespace WpfApp1
 {
@@ -31,72 +32,120 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
+
+            Thread thread = new Thread(TcpLoop);
+            thread.Start();
+            
+        }
+
+        public delegate void DeleFunc();
+        public void Func()
+        {
+            //要调用的UI元素  
+            //webbrowser.InvokeScript("clean");
+            Console.WriteLine("UI!!!!!!!!");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            webbrowser.InvokeScript("clean");
             
+
             TcpLoop();
         }
 
         List<Team> TEAMLIST = new List<Team>();
         private void TcpLoop() {
-            TcpClient client = new TcpClient("182.92.114.73", 8899);
-            NetworkStream sendStream = client.GetStream();
-            string jsonText = @"{""type"" : ""getteams""}";
-            Byte[] sendBytes = Encoding.Default.GetBytes(jsonText);
-            sendStream.Write(sendBytes, 0, sendBytes.Length);
-
-            NetworkStream ns = client.GetStream();
-            byte[] bytes = new byte[2048];
-            int bytesread = ns.Read(bytes, 0, bytes.Length);
-            string msg = Encoding.Default.GetString(bytes, 0, bytesread);
-            Console.WriteLine(msg);
-            JObject studentsJson = JObject.Parse(msg);
-
-            string type = studentsJson["type"].ToString();
-
-            JArray array2 = JArray.Parse(studentsJson["plist"].ToString());
-            
-            for (int i = 0; i < array2.Count; i++) {
-                Console.WriteLine(array2[i]["name"] +":"+ array2[i]["lon"].ToString() + ":" + array2[i]["lat"].ToString() + ":" + array2[i]["score"].ToString());
-                
-            }
-            foreach (JObject j in array2)
+            Thread.Sleep(5000);
+            while (true)
             {
-                bool has = false;
-                foreach (Team t in TEAMLIST) {
-                    if (t.teamName.Equals(j["name"].ToString()))
-                    {
-                        has = true;
-                        //update
-                        double[] res = getBaiducoor(new double[] { double.Parse(j["lon"].ToString()), double.Parse(j["lat"].ToString())});
-                        t.lon = res[0];
-                        t.lat = res[1];
-                        Console.WriteLine(t.lon +":"+t.lat);
-                        t.score = int.Parse(j["score"].ToString());
-                        continue;
-                    }
-                }
-                if (!has)
-                {
-                    Team team = new Team(j["name"].ToString());
-                    TEAMLIST.Add(team);
-                }
-
-            }
-
-            foreach (Team t in TEAMLIST) {
-                Console.WriteLine((float)t.lon);
                 
-                webbrowser.InvokeScript("update_make",new object[] { t.lon,t.lat, t.score.ToString(),t.teamName });
+                
 
+                TcpClient client = new TcpClient("182.92.114.73", 8899);
+                NetworkStream sendStream = client.GetStream();
+                string jsonText = @"{""type"" : ""getteams""}";
+                Byte[] sendBytes = Encoding.Default.GetBytes(jsonText);
+                sendStream.Write(sendBytes, 0, sendBytes.Length);
+
+                NetworkStream ns = client.GetStream();
+                byte[] bytes = new byte[2048];
+                int bytesread = ns.Read(bytes, 0, bytes.Length);
+                string msg = Encoding.Default.GetString(bytes, 0, bytesread);
+                Console.WriteLine(msg);
+                JObject studentsJson = JObject.Parse(msg);
+
+                string type = studentsJson["type"].ToString();
+
+                JArray array2 = JArray.Parse(studentsJson["plist"].ToString());
+
+                for (int i = 0; i < array2.Count; i++)
+                {
+                    Console.WriteLine(array2[i]["name"] + ":" + array2[i]["lon"].ToString() + ":" + array2[i]["lat"].ToString() + ":" + array2[i]["score"].ToString());
+
+                }
+                foreach (JObject j in array2)
+                {
+                    bool has = false;
+                    foreach (Team t in TEAMLIST)
+                    {
+                        if (t.teamName.Equals(j["name"].ToString()))
+                        {
+                            has = true;
+                            //update
+                            try
+                            {
+                                double[] res = getBaiducoor(new double[] { double.Parse(j["lon"].ToString()), double.Parse(j["lat"].ToString()) });
+                                t.lon = res[0];
+                                t.lat = res[1];
+                                Console.WriteLine(t.lon + ":" + t.lat);
+                                t.score = int.Parse(j["score"].ToString());
+                                continue;
+                            }
+                            catch (Exception) { 
+
+                            }
+                            
+                        }
+                    }
+                    if (!has)
+                    {
+                        Team team = new Team(j["name"].ToString());
+                        TEAMLIST.Add(team);
+                    }
+
+                }
+
+                Dispatcher.Invoke(
+                        new Action(
+                            delegate
+                            {
+                                //出问题的代码块
+                                webbrowser.InvokeScript("clean");
+                                
+                            }
+                    ));
+
+                foreach (Team t in TEAMLIST)
+                {
+                    Console.WriteLine((float)t.lon);
+                    Dispatcher.Invoke(
+                        new Action(
+                            delegate
+                            {
+                                //出问题的代码块
+                                
+                                webbrowser.InvokeScript("update_make", new object[] { t.lon, t.lat, "得分：" + t.score.ToString(), "队伍：" + t.teamName });
+                            }
+                    ));
+                    
+
+                }
+
+
+                sendStream.Flush();
+                sendStream.Close();
+                Thread.Sleep(1000);
             }
-
-
-            sendStream.Flush();
-            sendStream.Close();
             
         }
 
