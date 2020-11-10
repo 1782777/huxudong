@@ -32,10 +32,11 @@ namespace WpfApp1
         public MainWindow()
         {
             InitializeComponent();
-
+            //string advertResourcePath = Directory.GetCurrentDirectory() + @"\Resources";
+            webbrowser.Source = new Uri(Environment.CurrentDirectory + @"\Resources\baidu.html");
             Thread thread = new Thread(TcpLoop);
             thread.Start();
-            
+
         }
 
         public delegate void DeleFunc();
@@ -48,9 +49,17 @@ namespace WpfApp1
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            
+            TextBox tb = this.FindName("TextBox1") as TextBox;
+            string advertResourcePath = Directory.GetCurrentDirectory() + @"\Resources";
+            Array arrayAdvertResourcePath = Directory.GetFiles(advertResourcePath);
+            foreach (string advertPath in arrayAdvertResourcePath)
+            {
+                Console.WriteLine(advertPath);
+                tb.Text = advertPath;
+            }
 
-            TcpLoop();
+            //string path = System.Environment.CurrentDirectory;
+            //tb.Text = path;
         }
 
         List<Team> TEAMLIST = new List<Team>();
