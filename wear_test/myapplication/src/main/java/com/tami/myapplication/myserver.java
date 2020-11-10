@@ -121,7 +121,7 @@ public class myserver extends Service {
 //        label.setText(provider);
         try{
 //            Location location = mLocationManager.getLastKnownLocation(provider);
-            mLocationManager.requestLocationUpdates(provider, 1000, 2, locationListener);
+            mLocationManager.requestLocationUpdates(provider, 5000, 2, locationListener);
         }catch(SecurityException ex)
         {
 //            label.setText("not access");
