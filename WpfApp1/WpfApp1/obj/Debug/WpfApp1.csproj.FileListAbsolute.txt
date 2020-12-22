@@ -64,3 +64,11 @@ I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\40人系统.exe.manifest
 I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\40人系统.application
 I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\40人系统.exe
 I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\40人系统.pdb
+I:\work2020\huxudong\WpfApp1\WpfApp1\bin\Debug\MaterialDesignColors.dll
+I:\work2020\huxudong\WpfApp1\WpfApp1\bin\Debug\MaterialDesignThemes.Wpf.dll
+I:\work2020\huxudong\WpfApp1\WpfApp1\bin\Debug\MaterialDesignColors.pdb
+I:\work2020\huxudong\WpfApp1\WpfApp1\bin\Debug\MaterialDesignThemes.Wpf.pdb
+I:\work2020\huxudong\WpfApp1\WpfApp1\bin\Debug\MaterialDesignThemes.Wpf.xml
+I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\App.baml
+I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\TalkWin.g.cs
+I:\work2020\huxudong\WpfApp1\WpfApp1\obj\Debug\TalkWin.baml

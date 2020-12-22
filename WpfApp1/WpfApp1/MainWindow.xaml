@@ -3,15 +3,97 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1080" Width="1920">
+        Title="野战生存系统 version:1.0" Height="900" Width="1600">
     <Grid>
-        <WebBrowser x:Name="webbrowser"  Margin="0,34,0,0"/>
-        <Button Content="Button_1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="60" />
+                <RowDefinition />
+                
+            </Grid.RowDefinitions>
+            
+            <TextBlock Text="人员列表" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="25" FontWeight="Heavy"/>
+            <Border Margin="30 0 30 0" BorderBrush="DarkGray" BorderThickness="0 0 0 1"/>
+            <ListView Name="listView1" Grid.Column="0" Grid.Row="1">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Button Margin="5,0,5,0" Height="45" Click="Item_Click">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="&#xef0d;" FontFamily="/Font/#iconfont" FontSize="25" />
+                                <TextBlock Text="{Binding teamName}" FontFamily="/Font/#iconfont" FontSize="18" VerticalAlignment="Center" Margin="10 0 0 0" Width="120" FontWeight="Light"/>
+                                <TextBlock Text="&#xef18;" FontFamily="/Font/#iconfont" FontSize="25" />
+                                <TextBlock Text="{Binding score}" FontFamily="/Font/#iconfont" FontSize="18" VerticalAlignment="Center" Margin="10 0 0 0" Width="25" FontWeight="Light"/>
+
+                            </StackPanel>
+                        </Button>
+                        <!--<StackPanel Orientation="Horizontal" Height="50" >
+                            <Button Margin="5,0,5,0" Height="50">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="&#xef0d;" FontFamily="/Font/#iconfont" FontSize="25" />
+                                    <TextBlock Text="{Binding teamName}" FontFamily="/Font/#iconfont" FontSize="18" VerticalAlignment="Center" Margin="15 0 0 0" Width="150" FontWeight="Light"/>
+                                    <TextBlock Text="&#xef18;" FontFamily="/Font/#iconfont" FontSize="25" />
+                                    <TextBlock Text="{Binding score}" FontFamily="/Font/#iconfont" FontSize="18" VerticalAlignment="Center" Margin="15 0 0 0" FontWeight="Light"/>
+
+                                </StackPanel>
+                            </Button>
+                            <TextBlock TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-20 -5 -10 0" Text="&#xeef8;" FontFamily="/Font/#iconfont" FontSize="25" Foreground="Red" Visibility="Hidden">
+                                <TextBlock.Style>
+                                    <Style TargetType="TextBlock">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=score}" Value="0">
+                                                <Setter Property="Visibility" Value="Hidden"></Setter>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </StackPanel>-->
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            
+        </Grid>
+
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                
+                <RowDefinition />
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <WebBrowser x:Name="webbrowser" Grid.Column="1" Grid.Row="0"/>
+            <StackPanel Grid.Row="1" Grid.Column="1" Margin="0 0 0 0" Orientation="Horizontal">
+                <Button Style="{StaticResource MaterialDesignOutlinedButton}" >
+                    <TextBlock Text="&#xef28;" FontFamily="/Font/#iconfont" FontSize="20" Margin="3" />
+                </Button>
+                <Button Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <TextBlock Text="&#xef07;" FontFamily="/Font/#iconfont" FontSize="20" Margin="3" />
+                </Button>
+                <Button Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <TextBlock Text="&#xef2a;" FontFamily="/Font/#iconfont" FontSize="20" Margin="3" />
+                </Button>
+                <Button Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <TextBlock Text="&#xef2e;" FontFamily="/Font/#iconfont" FontSize="20" Margin="3" />
+                </Button>
+                <Button Style="{StaticResource MaterialDesignOutlinedButton}">
+                    <TextBlock Text="&#xef13;" FontFamily="/Font/#iconfont" FontSize="20" Margin="3" />
+                </Button>
+            </StackPanel>
+        </Grid>
+        
+        
+        
+        <!--<Button Content="Button_1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         <Label Content="Label123" HorizontalAlignment="Left" Margin="90,9,0,0" VerticalAlignment="Top" Width="298"/>
-        <TextBox Name="TextBox1" HorizontalAlignment="Left" Height="23" Margin="160,11,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="647"/>
+        <TextBox Name="TextBox1" HorizontalAlignment="Left" Height="23" Margin="160,11,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="647"/>-->
 
-
+        
     </Grid>
 </Window>

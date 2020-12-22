@@ -42,14 +42,38 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="40人系统.exe" size="16832">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="40人系统.exe" size="39872">
       <assemblyIdentity name="40人系统" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>2uALXkr2V68bZI0R+hO/9J9ri2ww1efZ+WE/kFwzycc=</dsig:DigestValue>
+        <dsig:DigestValue>uKaLeLChQwPBI7CwdXc4Tuy3JjX061MdI8P83uYwtRE=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MaterialDesignColors.dll" size="300032">
+      <assemblyIdentity name="MaterialDesignColors" version="1.2.7.1979" publicKeyToken="DF2A72020BD7962A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>d/pQnWa7tgPAOoEJwstdUnpwQC/lepx9LuP77yK5xIY=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MaterialDesignThemes.Wpf.dll" size="7727616">
+      <assemblyIdentity name="MaterialDesignThemes.Wpf" version="3.2.0.1979" publicKeyToken="DF2A72020BD7962A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>feGKj5Rze49jAmfq40yatU2lTC2zNU2SA6lR4Lys7wg=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

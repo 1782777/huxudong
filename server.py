@@ -9,6 +9,7 @@ import threading
 CARLIST=[]
 PHONELIST=[]
 TEAMLIST =[]
+MSGLIST = []
 
 class MyTCPHandler(socketserver.BaseRequestHandler):
     
@@ -68,7 +69,20 @@ class MyTCPHandler(socketserver.BaseRequestHandler):
             for t in TEAMLIST:
                 if t_name == t.name:
                     t.score = score
-        
+        if json_info['type'] == 'sendmsg':
+            s_name = json_info['s_name']
+            r_name = json_info['r_name']
+            msg_type = json_info['msg_type']
+            msg = json_info['msg']
+            msgs =  Msg(s_name,r_name,msg_type,msg)
+            MSGLIST.append(msgs)
+        if json_info['type'] == 'getmsg':
+            s_name = json_info['s_name']
+            for ms_ in MSGLIST:
+                if ms_.hearman == s_name:
+                    msg_dic ={'type':'msg','s_name':ms_.sayman,'msgtype':msg_type,'msgs':ms_.msg}
+                    msg_js = json.dumps(msg_dic)
+                    self.request.sendall(msg_js.encode('utf-8'))
         
     def setup(self):
         print("connet ：",self.client_address)
@@ -128,7 +142,13 @@ class Team():
             else:
                 self.live = True
                 self.lastheart =self.heart
-        
+
+class Msg():
+    def __init__(self,sayman,hearman,msgtype,msg):
+        self.sayman = sayman
+        self.hearman = hearman
+        self.msgtype = msgtype
+        self.msg = msg
 
 
 class Manager():

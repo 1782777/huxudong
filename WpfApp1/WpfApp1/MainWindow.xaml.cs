@@ -21,6 +21,7 @@ using Newtonsoft.Json.Linq;
 using System.Resources;
 using System.Net;
 using System.Threading;
+using System.ComponentModel;
 
 namespace WpfApp1
 {
@@ -29,14 +30,23 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        BindingList<Team> TEAMLIST = new BindingList<Team>();
         public MainWindow()
         {
             InitializeComponent();
             //string advertResourcePath = Directory.GetCurrentDirectory() + @"\Resources";
             webbrowser.Source = new Uri(Environment.CurrentDirectory + @"\Resources\baidu.html");
+            listView1.ItemsSource = TEAMLIST;
             Thread thread = new Thread(TcpLoop);
             thread.Start();
 
+           
+            //for (int i = 0; i < 32; i++) {
+            //    Team team = new Team("zx");
+            //    team.score = 0;
+            //    listView1.Items.Add(team);
+            //}
+            
         }
 
         public delegate void DeleFunc();
@@ -62,7 +72,17 @@ namespace WpfApp1
             //tb.Text = path;
         }
 
-        List<Team> TEAMLIST = new List<Team>();
+        private void Item_Click(object sender, RoutedEventArgs ee)
+        {
+            var btn = sender as Button;
+
+            var t = btn.DataContext as Team;
+            TalkWin tw = new TalkWin(t);
+            tw.Show();
+
+        }
+
+
         private void TcpLoop() {
             Thread.Sleep(5000);
             while (true)
@@ -87,73 +107,130 @@ namespace WpfApp1
 
                 JArray array2 = JArray.Parse(studentsJson["plist"].ToString());
 
+                Dispatcher.Invoke(
+                       new Action(
+                           delegate
+                           {
+                               webbrowser.InvokeScript("clean");
+                              
+                           }
+                       ));
+
                 for (int i = 0; i < array2.Count; i++)
                 {
                     Console.WriteLine(array2[i]["name"] + ":" + array2[i]["lon"].ToString() + ":" + array2[i]["lat"].ToString() + ":" + array2[i]["score"].ToString());
-
-                }
-                foreach (JObject j in array2)
-                {
-                    bool has = false;
-                    foreach (Team t in TEAMLIST)
-                    {
-                        if (t.teamName.Equals(j["name"].ToString()))
-                        {
-                            has = true;
-                            //update
-                            try
-                            {
-                                double[] res = getBaiducoor(new double[] { double.Parse(j["lon"].ToString()), double.Parse(j["lat"].ToString()) });
-                                t.lon = res[0];
-                                t.lat = res[1];
-                                Console.WriteLine(t.lon + ":" + t.lat);
-                                t.score = int.Parse(j["score"].ToString());
-                                continue;
-                            }
-                            catch (Exception) { 
-
-                            }
-                            
-                        }
-                    }
-                    if (!has)
-                    {
-                        Team team = new Team(j["name"].ToString());
-                        TEAMLIST.Add(team);
-                    }
-
-                }
-
-                Dispatcher.Invoke(
-                        new Action(
-                            delegate
-                            {
-                                //出问题的代码块
-                                webbrowser.InvokeScript("clean");
-                                
-                            }
-                    ));
-
-                foreach (Team t in TEAMLIST)
-                {
-                    Console.WriteLine((float)t.lon);
                     Dispatcher.Invoke(
                         new Action(
                             delegate
                             {
                                 //出问题的代码块
-                                
-                                webbrowser.InvokeScript("update_make", new object[] { t.lon, t.lat, "得分：" + t.score.ToString(), "队伍：" + t.teamName });
+                                try
+                                {
+                                    
+                                    //listView1.Items.Add(t);
+                                    Team team = new Team(array2[i]["name"].ToString(), int.Parse(array2[i]["score"].ToString()));
+                                    double[] res = getBaiducoor(new double[] { double.Parse(array2[i]["lon"].ToString()), double.Parse(array2[i]["lat"].ToString()) });
+                                    team.lon = res[0];
+                                    team.lat = res[1];
+
+                                    bool has = false;
+                                    for (int j = 0;j<TEAMLIST.Count;j++) {
+                                        if (TEAMLIST[j].teamName.Equals(team.teamName))
+                                        {
+                                            has = true;
+                                            TEAMLIST[j] = team;
+                                           
+                                        }
+                                    }
+                                    if (!has) {
+                                        TEAMLIST.Add(team);
+                                    }
+                                    
+
+                                    
+                                    webbrowser.InvokeScript("update_make", new object[] { team.lon, team.lat, "得分：" + team.score.ToString(), "队伍：" + team.teamName });
+                                }
+                                catch (Exception) {
+                                }
                             }
-                    ));
+                        ));
+                }
+                //foreach (JObject j in array2)
+                //{
+                //    bool has = false;
+                //    foreach (Team t in TEAMLIST)
+                //    {
+                //        if (t.teamName.Equals(j["name"].ToString()))
+                //        {
+                //            has = true;
+                //            //update
+                //            try
+                //            {
+                //                double[] res = getBaiducoor(new double[] { double.Parse(j["lon"].ToString()), double.Parse(j["lat"].ToString()) });
+                //                t.lon = res[0];
+                //                t.lat = res[1];
+                //                Console.WriteLine(t.lon + ":" + t.lat);
+                //                t.score = int.Parse(j["score"].ToString());
+                //                continue;
+                //            }
+                //            catch (Exception) { 
+
+                //            }
+                            
+                //        }
+                //    }
+                //    if (!has)
+                //    {
+                //        Dispatcher.Invoke(
+                //        new Action(
+                //            delegate
+                //            {
+                //                //出问题的代码块
+
+                //                //listView1.Items.Add(t);
+                //                Team team = new Team(j["name"].ToString(),j["score"]);
+                                
+                //                TEAMLIST.Add(team);
+                //            }
+                //        ));
+                        
+                //    }
+
+                //}
+
+                //Dispatcher.Invoke(
+                //        new Action(
+                //            delegate
+                //            {
+                //                //出问题的代码块
+                //                webbrowser.InvokeScript("clean");
+                //                //listView1.Items.Clear();
+                //            }
+                //    ));
+
+                
+                //foreach (Team t in TEAMLIST)
+                //{
+                //    Console.WriteLine((float)t.lon);
+                //    Dispatcher.Invoke(
+                //        new Action(
+                //            delegate
+                //            {
+                //                //出问题的代码块
+                                
+                //                //listView1.Items.Add(t);
+                //                webbrowser.InvokeScript("update_make", new object[] { t.lon, t.lat, "得分：" + t.score.ToString(), "队伍：" + t.teamName });
+                //            }
+                //    ));
                     
 
-                }
+                //}
 
 
                 sendStream.Flush();
                 sendStream.Close();
                 Thread.Sleep(1000);
+                
             }
             
         }
@@ -162,6 +239,8 @@ namespace WpfApp1
         {
             double longitude = coord[0];
             double latitude = coord[1];
+            Console.WriteLine(longitude);
+            Console.WriteLine(latitude);
             //需要转的gps经纬度
             string convertUrl = "http://api.map.baidu.com/ag/coord/convert?from=0&to=4&x=" + longitude + "&y=" + latitude + "";
 
@@ -198,18 +277,34 @@ namespace WpfApp1
             public string y { get; set; }
         }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 
-    public class Team {
+    public class Team : INotifyPropertyChanged{
 
-        public string teamName;
-        public int score;
+        //public string teamName;
+        //public int score;
         public double lon, lat;
-        public Team(string name)
+
+        public event PropertyChangedEventHandler PropertyChanged;
+       
+        public void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, e);
+            }
+        }
+        public string teamName { get; set; }
+        public int score { get; set; }
+        public Team(string name,int score)
         {
             Console.WriteLine("init a team" + name);
             this.teamName = name;
-            this.score = 0;
+            this.score = score;
             this.lon = 0.0;
             this.lat = 0.0;
         }

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.show();
 
                 Button btnLogin = (Button) dialogView.findViewById(R.id.btn_login);
-                Button btnCancel = (Button) dialogView.findViewById(R.id.btn_cancel);
+                Button btnCancel = (Button) dialogView.findViewById(R.id.btn_send);
                 btnLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 //                            listView.setAdapter(adapter);
                         }
                         socket.close();
-                        Thread.sleep(25000);
+                        Thread.sleep(1000);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
